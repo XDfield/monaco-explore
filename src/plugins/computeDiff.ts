@@ -104,29 +104,33 @@ const makeDiffComputationResult = (
 };
 
 export const PlugIn = (editor: any) => {
-  const proto = editor.__proto__;
-  // disable default behavior
-  proto._beginUpdateDecorationsSoon = function(): void {
-    this._beginUpdateDecorationsTimeout = -1;
-  };
-  proto._beginUpdateDecorations = function(): void {
-    this._beginUpdateDecorationsTimeout = -1;
-  };
-  // add method
-  // tslint:disable-next-line: only-arrow-functions
-  proto.setDiff = function(diff: string): void {
-    this._diffComputationToken++;
-    // load diff computation result
-    try {
-      this._diffComputationResult = makeDiffComputationResult(
-        diff,
-        this._ignoreTrimWhitespace
-      );
-      this._updateDecorationsRunner.schedule();
-      this._onDidUpdateDiff.fire();
-    } catch (error) {
-      this._diffComputationResult = null;
-      this._updateDecorationsRunner.schedule();
+  Object.defineProperties(editor, {
+    _beginUpdateDecorations: {
+      value(): void {
+        this._beginUpdateDecorationsTimeout = -1;
+      }
+    },
+    _beginUpdateDecorationsSoon: {
+      value(): void {
+        this._beginUpdateDecorationsTimeout = -1;
+      }
+    },
+    setDiff: {
+      value(diff: string): void {
+        this._diffComputationToken++;
+
+        try {
+          this._diffComputationResult = makeDiffComputationResult(
+            diff,
+            this._ignoreTrimWhitespace
+          );
+          this._updateDecorationsRunner.schedule();
+          this._onDidUpdateDiff.fire();
+        } catch (error) {
+          this._diffComputationResult = null;
+          this._updateDecorationsRunner.schedule();
+        }
+      }
     }
-  };
+  });
 };
