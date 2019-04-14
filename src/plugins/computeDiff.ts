@@ -1,3 +1,5 @@
+import * as monacoApi from "monaco-editor/esm/vs/editor/editor.api";
+
 const diffPattern = /@@ -(\d+),\d+ \+(\d+),\d+ @@/;
 
 interface IChanges {
@@ -103,7 +105,7 @@ const makeDiffComputationResult = (
   };
 };
 
-export const PlugIn = (editor: any) => {
+export default (editor: monacoApi.editor.IStandaloneDiffEditor) => {
   Object.defineProperties(editor, {
     _beginUpdateDecorations: {
       value(): void {

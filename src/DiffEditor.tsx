@@ -2,7 +2,7 @@ import * as monacoApi from "monaco-editor/esm/vs/editor/editor.api";
 import * as React from "react";
 
 import { diff, file, origin } from "./file";
-import { PlugIn as diffEditorPlugIn } from "./plugins/computeDiff";
+import Plugin from "./plugins";
 
 import "./DiffEditor.css";
 
@@ -49,7 +49,8 @@ export class DiffEditor extends React.Component<{}, IState> {
       });
       monacoApi.editor.setTheme("vs-dark");
 
-      diffEditorPlugIn(this.editor);
+      Plugin.computeDiff(this.editor);
+      Plugin.renderEol(this.editor);
     }
   };
 
