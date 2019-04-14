@@ -1,5 +1,5 @@
-// load monaco
-import "monaco-editor/esm/vs/editor/editor.main";
+// load monaco language
+import "monaco-editor/esm/vs/basic-languages/monaco.contribution";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import App from "./App";
